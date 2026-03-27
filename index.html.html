@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polo from England — Portal Interno</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:   #1B2A5E;
+  --navy2:  #142050;
+  --navy3:  #0E1840;
+  --navylt: #253572;
+  --red:    #C41230;
+  --red2:   #9e0e26;
+  --white:  #ffffff;
+  --off:    #f7f7f5;
+  --light:  #eeeeec;
+  --border: #d8d8d4;
+  --mid:    #888884;
+  --text:   #3a3a38;
+  --dark:   #1a1a18;
+  --green:  #1e6e3c;
+  --amber:  #b86e00;
+  --ff: 'Raleway', sans-serif;
+  --ffb: 'Open Sans', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}
+body{font-family:var(--ffb);background:#eeecea;color:var(--text);overflow-x:hidden}
+
+/* SWITCHER */
+#sw{position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--navy);display:flex;align-items:center;padding:0 20px;height:40px;gap:4px;border-bottom:3px solid var(--red)}
+#sw .swb{font-family:var(--ff);font-size:.58rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-right:16px}
+#sw .sws{width:1px;height:14px;background:rgba(255,255,255,.1);margin:0 10px}
+#sw button{font-family:var(--ff);font-size:.57rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:4px 12px;border:1px solid transparent;background:transparent;color:rgba(255,255,255,.4);cursor:pointer;transition:all .15s}
+#sw button:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.8)}
+#sw button.active{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2)}
+#sw .swn{margin-left:auto;font-size:.55rem;color:rgba(255,255,255,.2);font-style:italic;letter-spacing:.04em}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;padding-top:40px}
+.screen.active{display:block;animation:fi .2s ease}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+
+/* LOGIN */
+#s-login{background:var(--navy3);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px}
+.login-wrap{display:grid;grid-template-columns:1fr 360px;width:820px;background:#fff;border-top:4px solid var(--red)}
+.login-l{padding:48px 44px;background:var(--navy);display:flex;flex-direction:column;justify-content:space-between}
+.login-l .logo-area{margin-bottom:36px}
+.login-l .logo-area .lname{font-family:var(--ff);font-size:.75rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:#fff;margin-top:8px}
+.login-l .logo-area .lsub{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-top:3px}
+.login-l h1{font-family:var(--ff);font-size:1.3rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;line-height:1.3;margin-bottom:12px}
+.login-l h1 span{color:var(--red)}
+.login-l p{font-size:.72rem;color:rgba(255,255,255,.35);line-height:1.85;max-width:280px}
+.login-l .feats{margin-top:auto;display:flex;flex-direction:column;gap:7px}
+.login-l .feat{display:flex;align-items:center;gap:8px;font-family:var(--ff);font-size:.58rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.login-l .feat .dot{width:3px;height:3px;background:var(--red);flex:none}
+.login-r{padding:44px 36px;background:#fff;display:flex;flex-direction:column;justify-content:center}
+.login-r .lrt{font-family:var(--ff);font-size:.52rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);margin-bottom:24px}
+.lf{margin-bottom:12px}
+.lf label{display:block;font-family:var(--ff);font-size:.5rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-bottom:5px}
+.lf input,.lf select{width:100%;padding:10px 12px;border:1px solid var(--border);font-family:var(--ffb);font-size:.82rem;color:var(--dark);background:#fff;outline:none;border-radius:0;transition:border-color .15s}
+.lf input:focus,.lf select:focus{border-color:var(--navy)}
+.btn-login{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;font-family:var(--ff);font-size:.6rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:background .12s}
+.btn-login:hover{background:var(--navy2)}
+.login-hint{margin-top:18px;font-size:.62rem;color:var(--mid);line-height:1.7;text-align:center;font-family:var(--ffb)}
+
+/* PORTAL SHELL */
+.portal{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 40px)}
+
+/* SIDEBAR */
+.sb{background:var(--navy);display:flex;flex-direction:column;position:sticky;top:40px;height:calc(100vh - 40px);overflow-y:auto;border-right:1px solid var(--navy2)}
+.sb-head{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sb-logo .lico{width:30px;height:30px;background:var(--red);display:flex;align-items:center;justify-content:center;flex:none}
+.sb-logo .ltxt .l1{font-family:var(--ff);font-size:.68rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#fff}
+.sb-logo .ltxt .l2{font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-top:2px}
+.sb-user{display:flex;align-items:center;gap:9px;padding:9px 11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
+.sb-user .av{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:.56rem;font-weight:800;color:#fff;flex:none;letter-spacing:.04em}
+.av.r{background:var(--red)}
+.av.b{background:#1a4f8a}
+.av.g{background:#7a5a10}
+.av.n{background:var(--navylt)}
+.sb-user .un{font-family:var(--ff);font-size:.68rem;font-weight:700;letter-spacing:.04em;color:#fff}
+.sb-user .ur{font-size:.52rem;color:rgba(255,255,255,.25);letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
+.sb-nav{flex:1;padding:12px 0}
+.sb-grp{margin-bottom:18px}
+.sb-gl{padding:0 18px;font-family:var(--ff);font-size:.48rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.18);margin-bottom:4px}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 18px;font-family:var(--ff);font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);cursor:pointer;transition:all .12s;border-left:2px solid transparent}
+.ni:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.7)}
+.ni.active{background:rgba(255,255,255,.07);color:#fff;border-left-color:var(--red)}
+.ni .ic{font-size:.8rem;width:14px;text-align:center;flex:none;opacity:.7}
+.ni .badge{margin-left:auto;background:var(--red);color:#fff;font-size:.48rem;font-weight:800;padding:1px 5px;letter-spacing:.04em;min-width:14px;text-align:center}
+.sb-foot{padding:12px 18px;border-top:1px solid rgba(255,255,255,.05)}
+.sb-foot .sfi{display:flex;align-items:center;gap:7px;font-family:var(--ff);font-size:.58rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:5px 0;cursor:pointer;transition:color .12s}
+.sb-foot .sfi:hover{color:rgba(255,255,255,.45)}
+
+/* MAIN */
+.main{background:var(--off);padding:26px 30px;min-width:0;overflow-x:hidden}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);gap:16px}
+.topbar .th{font-family:var(--ff);font-size:1rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+.topbar .ts{font-family:var(--ff);font-size:.55rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-top:4px}
+.tbr{display:flex;align-items:center;gap:7px;flex:none}
+.sel{padding:6px 10px;border:1px solid var(--border);font-family:var(--ff);font-size:.56rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);background:#fff;cursor:pointer;border-radius:0}
+.btn{padding:7px 14px;font-family:var(--ff);font-size:.56rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;transition:all .12s}
+.btn.nv{background:var(--navy);color:#fff}
+.btn.nv:hover{background:var(--navy2)}
+.btn.rd{background:var(--red);color:#fff}
+.btn.rd:hover{background:var(--red2)}
+.btn.gh{background:#fff;color:var(--navy);border:1px solid var(--border)}
+.btn.gh:hover{border-color:var(--navy)}
+
+/* BANNER */
+.banner{padding:18px 22px;margin-bottom:18px;display:flex;align-items:center;gap:24px}
+.banner.nv{background:var(--navy);color:#fff}
+.banner.gn{background:#164d28;color:#fff}
+.btext .b1{font-family:var(--ff);font-size:.5rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.45;margin-bottom:4px}
+.btext .b2{font-family:var(--ff);font-size:1rem;font-weight:800;letter-spacing:.03em}
+.btext .b3{font-size:.65rem;opacity:.5;margin-top:2px}
+.bprog{flex:1;max-width:240px}
+.bprog .bpw{height:2px;background:rgba(255,255,255,.15);margin-bottom:5px}
+.bprog .bpf{height:100%;background:rgba(255,255,255,.75)}
+.bprog .bpl{font-family:var(--ff);font-size:.5rem;letter-spacing:.08em;opacity:.45}
+.bval{text-align:right}
+.bval .bv1{font-family:var(--ff);font-size:.48rem;letter-spacing:.16em;text-transform:uppercase;opacity:.35;margin-bottom:3px}
+.bval .bv2{font-family:var(--ff);font-size:1.4rem;font-weight:900;line-height:1}
+.bval .bv3{font-size:.52rem;opacity:.3;margin-top:2px}
+
+/* KPI CARDS */
+.krow{display:grid;gap:10px;margin-bottom:14px}
+.krow.c4{grid-template-columns:repeat(4,1fr)}
+.krow.c3{grid-template-columns:repeat(3,1fr)}
+.krow.c5{grid-template-columns:repeat(5,1fr)}
+.kc{background:#fff;padding:16px 18px;border-top:3px solid var(--border);border-left:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.kc.nv{border-top-color:var(--navy)}
+.kc.rd{border-top-color:var(--red)}
+.kc.gn{border-top-color:var(--green)}
+.kc.am{border-top-color:var(--amber)}
+.kc .kl{font-family:var(--ff);font-size:.5rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-bottom:9px}
+.kc .kv{font-family:var(--ff);font-size:1.5rem;font-weight:900;color:var(--navy);line-height:1;margin-bottom:7px;letter-spacing:-.02em}
+.kc .kv small{font-family:var(--ffb);font-size:.65rem;font-weight:400;color:#ccc;letter-spacing:0}
+.kc .kd{font-family:var(--ff);font-size:.58rem;font-weight:700;letter-spacing:.04em}
+.kc .kd.up{color:var(--green)}
+.kc .kd.dn{color:var(--red)}
+.kc .kd.nu{color:var(--mid)}
+.kc .kpb{height:2px;background:var(--light);margin-top:9px}
+.kc .kpb .f{height:100%}
+.kc .kpl{font-family:var(--ff);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:#ccc;margin-top:3px}
+
+/* PANEL */
+.panel{background:#fff;border:1px solid var(--border);margin-bottom:12px}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
+.ph h3{font-family:var(--ff);font-size:.6rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--navy)}
+.ph .phr{display:flex;gap:6px;align-items:center}
+.pb{padding:16px}
+.pb0{padding:0}
+
+/* BAR CHART */
+.bchart{display:flex;align-items:flex-end;gap:10px;height:100px}
+.bc{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bc .bv{font-family:var(--ff);font-size:.56rem;font-weight:700;color:var(--navy)}
+.bc .bb{width:100%}
+.bc .bl{font-family:var(--ff);font-size:.52rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--mid)}
+
+/* TABLE */
+.t{width:100%;border-collapse:collapse}
+.t th{font-family:var(--ff);font-size:.5rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);padding:9px 14px;text-align:left;border-bottom:2px solid var(--light);background:var(--off)}
+.t td{padding:10px 14px;font-size:.73rem;color:var(--text);border-bottom:1px solid var(--light)}
+.t tr:last-child td{border-bottom:none}
+.t tr:hover td{background:#fafaf8}
+
+/* TAGS */
+.tag{display:inline-block;padding:2px 7px;font-family:var(--ff);font-size:.48rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.tag.lon{background:var(--navy);color:#fff}
+.tag.liv{background:#0d2a4a;color:#fff}
+.tag.oxf{background:#0a2810;color:#fff}
+.tag.ok{background:#e5f3ea;color:#0f5228;border:1px solid #b8dcc6}
+.tag.wn{background:#fef3e2;color:#8a5000;border:1px solid #f5d89a}
+.tag.er{background:#fdecea;color:#8a1020;border:1px solid #f5b8bb}
+
+/* PROGRESS */
+.pm{display:flex;align-items:center;gap:7px}
+.pm .pb2{flex:1;height:3px;background:var(--light)}
+.pm .pb2 .f{height:100%}
+.pm .pct{font-family:var(--ff);font-size:.6rem;font-weight:800;width:32px;text-align:right}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.g21{display:grid;grid-template-columns:1.6fr 1fr;gap:12px;margin-bottom:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+
+/* ACTIVITY */
+.act-list{display:flex;flex-direction:column}
+.act-item{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--light)}
+.act-item:last-child{border-bottom:none}
+.act-item .aic{width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.7rem;background:var(--off);flex:none}
+.act-item .at{font-size:.7rem;color:var(--dark);margin-bottom:2px}
+.act-item .at b{font-weight:700;color:var(--navy)}
+.act-item .ts{font-family:var(--ff);font-size:.52rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#c0c0bc}
+
+/* TIER CARDS */
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.tc{padding:18px;color:#fff;border-top:3px solid rgba(255,255,255,.15)}
+.tc.lon{background:var(--navy)}
+.tc.liv{background:#0e2948}
+.tc.oxf{background:#0a2814}
+.tc .tl{font-family:var(--ff);font-size:.56rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;margin-bottom:2px}
+.tc .tc2{font-size:.52rem;opacity:.3;letter-spacing:.06em;margin-bottom:12px;text-transform:uppercase}
+.tc .tv{font-family:var(--ff);font-size:1.5rem;font-weight:900;line-height:1;margin-bottom:2px}
+.tc .tlbl{font-family:var(--ff);font-size:.48rem;opacity:.3;letter-spacing:.14em;text-transform:uppercase}
+.tc .tbar{height:1px;background:rgba(255,255,255,.1);margin-top:12px;overflow:hidden}
+.tc .tbar .f{height:100%;background:rgba(255,255,255,.5)}
+.tc .tft{display:flex;justify-content:space-between;font-family:var(--ff);font-size:.5rem;opacity:.28;margin-top:4px;letter-spacing:.04em}
+
+/* CHANNEL */
+.ch{margin-bottom:12px}
+.ch:last-child{margin-bottom:0}
+.ch .chh{display:flex;justify-content:space-between;font-size:.7rem;margin-bottom:5px}
+.ch .chn{color:var(--dark);font-weight:600}
+.ch .chv{font-family:var(--ff);font-weight:800;color:var(--navy)}
+.ch .cht{height:4px;background:var(--light)}
+.ch .cht .f{height:100%}
+
+/* TRAINING CARD */
+.trc{border:1px solid var(--border);padding:13px;margin-bottom:9px}
+.trc:last-child{margin-bottom:0}
+.trc .trh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.trc .trt{font-family:var(--ff);font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy)}
+.trc .trm{font-size:.63rem;color:var(--mid);margin-bottom:9px}
+
+/* LINK BOX */
+.linkbox{display:flex;align-items:center;gap:9px;background:var(--off);border:1px solid var(--border);padding:9px 13px;font-family:var(--ff);font-size:.65rem;font-weight:600;color:var(--navy);letter-spacing:.02em;flex:1}
+
+/* AVA ROW */
+.avr{display:flex;align-items:center;gap:8px}
+.av{width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:.54rem;font-weight:800;flex:none;color:#fff;letter-spacing:.04em}
+.avr .vn{font-size:.73rem;font-weight:600;color:var(--navy)}
+
+/* RANK */
+.rk{font-family:var(--ff);font-size:.85rem;font-weight:900}
+.rk.r1{color:var(--amber)}
+.rk.r2{color:#888}
+.rk.r3{color:#7a4810}
+
+/* UTILS */
+.fw8{font-weight:800;font-family:var(--ff);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase}
+.mono{font-family:var(--ff);font-weight:700}
+.tg{color:var(--green)}.tr{color:var(--red)}.ta{color:var(--amber)}.tn{color:var(--navy)}
+
+/* BELL */
+.bell{position:relative;cursor:pointer;font-size:.9rem}
+.bell::after{content:'3';position:absolute;top:-5px;right:-7px;background:var(--red);color:#fff;font-size:.42rem;font-weight:800;width:13px;height:13px;display:flex;align-items:center;justify-content:center;font-family:var(--ff)}
+</style>
+</head>
+<body>
+
+<!-- SWITCHER -->
+<div id="sw">
+  <div class="swb">PFE · Portal</div>
+  <div class="sws"></div>
+  <button onclick="show('login')" id="btn-login">Login</button>
+  <button onclick="show('emb')" id="btn-emb" class="active">Embaixador</button>
+  <button onclick="show('vend')" id="btn-vend">Vendedor</button>
+  <button onclick="show('ceo')" id="btn-ceo">CEO</button>
+  <div class="swn">Protótipo visual · Uso interno PFE · Janeiro 2026</div>
+</div>
+
+<!-- ══ LOGIN ══ -->
+<div id="s-login" class="screen">
+<div style="min-height:calc(100vh - 40px);background:var(--navy3);display:flex;align-items:center;justify-content:center;padding:40px;">
+<div class="login-wrap">
+  <div class="login-l">
+    <div>
+      <div class="logo-area">
+        <!-- Lion + UK flag SVG, simplified fiel ao logo real -->
+        <svg width="68" height="48" viewBox="0 0 68 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- UK Flag mini -->
+          <rect x="0" y="0" width="28" height="18" fill="#012169"/>
+          <path d="M0 0 L28 18 M28 0 L0 18" stroke="white" stroke-width="3"/>
+          <path d="M0 0 L28 18 M28 0 L0 18" stroke="#C8102E" stroke-width="1.5"/>
+          <rect x="12" y="0" width="4" height="18" fill="white"/>
+          <rect x="0" y="7" width="28" height="4" fill="white"/>
+          <rect x="13" y="0" width="2" height="18" fill="#C8102E"/>
+          <rect x="0" y="8" width="28" height="2" fill="#C8102E"/>
+          <!-- Lion simple -->
+          <g transform="translate(32,2)">
+            <text x="0" y="16" font-size="20" fill="#1B2A5E" opacity=".9">♞</text>
+          </g>
+        </svg>
+        <div class="lname">POLO FROM ENGLAND</div>
+        <div class="lsub">Portal do Ecossistema</div>
+      </div>
+      <h1>Seu painel<br>de <span>controle</span><br>começa aqui.</h1>
+      <p>Acesso exclusivo para Embaixadores, Consultores e Vendedores. Todos os dados do seu negócio em um único lugar.</p>
+    </div>
+    <div class="feats">
+      <div class="feat"><div class="dot"></div>Dashboards em tempo real por perfil</div>
+      <div class="feat"><div class="dot"></div>Ranking e metas do ecossistema</div>
+      <div class="feat"><div class="dot"></div>Treinamentos e capacitação</div>
+      <div class="feat"><div class="dot"></div>Integração B2C + ERP</div>
+    </div>
+  </div>
+  <div class="login-r">
+    <div class="lrt">Acesse sua conta</div>
+    <div class="lf">
+      <label>Perfil</label>
+      <select><option>Embaixador (Lojista)</option><option>Vendedor</option><option>Consultor</option><option>CEO / Diretoria</option></select>
+    </div>
+    <div class="lf">
+      <label>E-mail</label>
+      <input type="email" value="embaixador@loja.com.br">
+    </div>
+    <div class="lf">
+      <label>Senha</label>
+      <input type="password" value="••••••••">
+    </div>
+    <button class="btn-login" onclick="show('emb')">Entrar no Portal →</button>
+    <div class="login-hint">Acesso restrito a parceiros cadastrados.<br>Problema? Fale com seu Consultor PFE.</div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ══ EMBAIXADOR ══ -->
+<div id="s-emb" class="screen active">
+<div class="portal">
+  <aside class="sb">
+    <div class="sb-head">
+      <div class="sb-logo">
+        <div class="lico">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="10" fill="#012169"/><path d="M0 0L16 10M16 0L0 10" stroke="white" stroke-width="1.8"/><path d="M0 0L16 10M16 0L0 10" stroke="#C8102E" stroke-width=".9"/><rect x="6.5" y="0" width="3" height="10" fill="white"/><rect x="0" y="3.5" width="16" height="3" fill="white"/><rect x="7" y="0" width="2" height="10" fill="#C8102E"/><rect x="0" y="4" width="16" height="2" fill="#C8102E"/></svg>
+        </div>
+        <div class="ltxt">
+          <div class="l1">POLO FROM ENGLAND</div>
+          <div class="l2">Portal do Embaixador</div>
+        </div>
+      </div>
+      <div class="sb-user">
+        <div class="av r">RC</div>
+        <div><div class="un">Roberto Campos</div><div class="ur">London · Campinas SP</div></div>
+      </div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-grp">
+        <div class="sb-gl">Principal</div>
+        <div class="ni active"><span class="ic">◼</span> Dashboard</div>
+        <div class="ni"><span class="ic">◻</span> Pedidos <span class="badge">4</span></div>
+        <div class="ni"><span class="ic">▣</span> Estoque</div>
+        <div class="ni"><span class="ic">$</span> Comissões</div>
+      </div>
+      <div class="sb-grp">
+        <div class="sb-gl">Equipe</div>
+        <div class="ni"><span class="ic">♟</span> Vendedores</div>
+        <div class="ni"><span class="ic">◎</span> Metas</div>
+      </div>
+      <div class="sb-grp">
+        <div class="sb-gl">Capacitação</div>
+        <div class="ni"><span class="ic">▷</span> Treinamentos <span class="badge">2</span></div>
+        <div class="ni"><span class="ic">□</span> Materiais</div>
+      </div>
+    </div>
+    <div class="sb-foot"><div class="sfi" onclick="show('login')">← Sair</div></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div><div class="th">Dashboard — Embaixador</div><div class="ts">Roberto Campos · London · Campinas SP · Março 2026</div></div>
+      <div class="tbr">
+        <select class="sel"><option>Março 2026</option><option>Fevereiro</option></select>
+        <button class="btn gh">↓ Exportar</button>
+        <div class="bell">🔔</div>
+      </div>
+    </div>
+
+    <div class="banner nv">
+      <div class="btext"><div class="b1">Meta Mensal · Março 2026</div><div class="b2">R$ 10.200 vendidos no mês</div><div class="b3">Faltam R$ 1.800 para bater a meta — 7 dias restantes</div></div>
+      <div class="bprog"><div class="bpw"><div class="bpf" style="width:85%"></div></div><div class="bpl">85% da meta de R$ 12.000</div></div>
+      <div class="bval"><div class="bv1">Ranking</div><div class="bv2">#3</div><div class="bv3">de 18 embaixadores</div></div>
+    </div>
+
+    <div class="krow c4">
+      <div class="kc rd"><div class="kl">Vendas do Mês</div><div class="kv">R$ 10.200</div><div class="kd up">↑ +18% vs fevereiro</div></div>
+      <div class="kc gn"><div class="kl">Comissão a Receber</div><div class="kv">R$ 2.040</div><div class="kd nu">Pagamento em 05/04</div><div class="kpb"><div class="f" style="width:85%;background:var(--green)"></div></div><div class="kpl">20% sobre R$ 10.200</div></div>
+      <div class="kc nv"><div class="kl">Pedidos no Mês</div><div class="kv">47 <small>pedidos</small></div><div class="kd up">↑ +12 vs março 2025</div><div class="kpb"><div class="f" style="width:78%;background:var(--navy)"></div></div><div class="kpl">4 aguardando envio</div></div>
+      <div class="kc am"><div class="kl">Vendedores Ativos</div><div class="kv">5 <small>/ 6</small></div><div class="kd dn">↓ 1 sem venda este mês</div></div>
+    </div>
+
+    <div class="g21">
+      <div class="panel">
+        <div class="ph"><h3>Vendas por Semana — Março</h3>
+          <div class="phr"><span style="font-family:var(--ff);font-size:.5rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);display:flex;align-items:center;gap:8px">
+            <span style="width:10px;height:2px;background:var(--navy);display:inline-block"></span>Físico
+            <span style="width:10px;height:2px;background:var(--red);display:inline-block;margin-left:4px"></span>Digital
+          </span></div>
+        </div>
+        <div class="pb">
+          <div class="bchart">
+            <div class="bc"><div class="bv">R$2.1k</div><div class="bb" style="height:52%;background:var(--navy)"></div><div class="bl">Sem 1</div></div>
+            <div class="bc"><div class="bv">R$1.9k</div><div class="bb" style="height:46%;background:var(--navy)"></div><div class="bl">Sem 2</div></div>
+            <div class="bc"><div class="bv">R$3.5k</div><div class="bb" style="height:88%;background:var(--red)"></div><div class="bl">Sem 3</div></div>
+            <div class="bc"><div class="bv">R$2.7k</div><div class="bb" style="height:66%;background:var(--navy)"></div><div class="bl">Sem 4</div></div>
+          </div>
+          <div style="display:flex;gap:18px;margin-top:12px;padding-top:10px;border-top:1px solid var(--light)">
+            <div><div style="font-family:var(--ff);font-size:.48rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#ccc;margin-bottom:2px">Físico</div><div style="font-family:var(--ff);font-size:.95rem;font-weight:900;color:var(--navy)">R$ 6.800</div></div>
+            <div><div style="font-family:var(--ff);font-size:.48rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#ccc;margin-bottom:2px">Digital B2C</div><div style="font-family:var(--ff);font-size:.95rem;font-weight:900;color:var(--red)">R$ 3.400</div></div>
+            <div style="margin-left:auto;text-align:right"><div style="font-family:var(--ff);font-size:.48rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#ccc;margin-bottom:2px">Ticket Médio</div><div style="font-family:var(--ff);font-size:.95rem;font-weight:900;color:var(--navy)">R$ 217</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>Mais Vendidos</h3></div>
+        <div class="pb0"><table class="t">
+          <thead><tr><th>Produto</th><th>Qtd</th><th>Receita</th></tr></thead>
+          <tbody>
+            <tr><td>Polo Lisa Navy M</td><td>14</td><td class="mono">R$ 2.716</td></tr>
+            <tr><td>Camisa Oxford G</td><td>9</td><td class="mono">R$ 2.898</td></tr>
+            <tr><td>Polo Fashion P</td><td>8</td><td class="mono">R$ 2.120</td></tr>
+            <tr><td>Camiseta Lisa M</td><td>12</td><td class="mono">R$ 1.308</td></tr>
+            <tr><td>Bermuda Sarja 42</td><td>4</td><td class="mono">R$ 1.158</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><h3>Equipe — Desempenho em Março</h3><div class="phr"><button class="btn gh">+ Convidar</button></div></div>
+      <div class="pb0"><table class="t">
+        <thead><tr><th>Vendedor</th><th>Vendas</th><th>Meta</th><th>Progresso</th><th>Canal</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><div class="avr"><div class="av r">AC</div><div class="vn">Ana Carvalho</div></div></td><td class="mono tg">R$ 3.200</td><td class="mono" style="color:#ccc">R$ 3.000</td><td><div class="pm"><div class="pb2"><div class="f" style="width:100%;background:var(--green)"></div></div><div class="pct tg">107%</div></div></td><td style="font-size:.64rem;color:var(--mid)">Físico + Digital</td><td><span class="tag ok">Ativo</span></td></tr>
+          <tr><td><div class="avr"><div class="av b">CM</div><div class="vn">Carlos Mendes</div></div></td><td class="mono">R$ 2.800</td><td class="mono" style="color:#ccc">R$ 3.000</td><td><div class="pm"><div class="pb2"><div class="f" style="width:93%;background:var(--navy)"></div></div><div class="pct">93%</div></div></td><td style="font-size:.64rem;color:var(--mid)">Físico</td><td><span class="tag ok">Ativo</span></td></tr>
+          <tr><td><div class="avr"><div class="av n">FL</div><div class="vn">Fernanda Lima</div></div></td><td class="mono">R$ 2.100</td><td class="mono" style="color:#ccc">R$ 3.000</td><td><div class="pm"><div class="pb2"><div class="f" style="width:70%;background:var(--amber)"></div></div><div class="pct ta">70%</div></div></td><td style="font-size:.64rem;color:var(--mid)">Digital</td><td><span class="tag wn">Atenção</span></td></tr>
+          <tr><td><div class="avr"><div class="av r" style="background:#7a1020">JR</div><div class="vn">João Ribeiro</div></div></td><td class="mono tr">R$ 980</td><td class="mono" style="color:#ccc">R$ 3.000</td><td><div class="pm"><div class="pb2"><div class="f" style="width:33%;background:var(--red)"></div></div><div class="pct tr">33%</div></div></td><td style="font-size:.64rem;color:var(--mid)">—</td><td><span class="tag er">Alerta</span></td></tr>
+          <tr><td><div class="avr"><div class="av" style="background:#4a1a6a">MC</div><div class="vn">Mariana Costa</div></div></td><td class="mono">R$ 1.120</td><td class="mono" style="color:#ccc">R$ 2.000</td><td><div class="pm"><div class="pb2"><div class="f" style="width:56%;background:var(--amber)"></div></div><div class="pct ta">56%</div></div></td><td style="font-size:.64rem;color:var(--mid)">Digital</td><td><span class="tag ok">Ativo</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ══ VENDEDOR ══ -->
+<div id="s-vend" class="screen">
+<div class="portal">
+  <aside class="sb">
+    <div class="sb-head">
+      <div class="sb-logo">
+        <div class="lico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="10" fill="#012169"/><path d="M0 0L16 10M16 0L0 10" stroke="white" stroke-width="1.8"/><path d="M0 0L16 10M16 0L0 10" stroke="#C8102E" stroke-width=".9"/><rect x="6.5" y="0" width="3" height="10" fill="white"/><rect x="0" y="3.5" width="16" height="3" fill="white"/><rect x="7" y="0" width="2" height="10" fill="#C8102E"/><rect x="0" y="4" width="16" height="2" fill="#C8102E"/></svg></div>
+        <div class="ltxt"><div class="l1">POLO FROM ENGLAND</div><div class="l2">Portal do Vendedor</div></div>
+      </div>
+      <div class="sb-user"><div class="av b">AC</div><div><div class="un">Ana Carvalho</div><div class="ur">Vendedora · London Campinas</div></div></div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-grp"><div class="sb-gl">Principal</div>
+        <div class="ni active"><span class="ic">◼</span> Meu Desempenho</div>
+        <div class="ni"><span class="ic">◻</span> Minhas Vendas</div>
+        <div class="ni"><span class="ic">◈</span> Meu Link</div>
+        <div class="ni"><span class="ic">▣</span> Catálogo</div>
+      </div>
+      <div class="sb-grp"><div class="sb-gl">Capacitação</div>
+        <div class="ni"><span class="ic">▷</span> Treinamentos <span class="badge">2</span></div>
+      </div>
+    </div>
+    <div class="sb-foot"><div class="sfi" onclick="show('login')">← Sair</div></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div><div class="th">Meu Desempenho</div><div class="ts">Ana Carvalho · Roberto Campos · Março 2026</div></div>
+      <div class="tbr"><select class="sel"><option>Março 2026</option></select><button class="btn rd">+ Gerar Link</button></div>
+    </div>
+
+    <div class="banner gn">
+      <div class="btext"><div class="b1">Meta atingida</div><div class="b2">R$ 3.200 vendidos em março</div><div class="b3">107% da meta · 1ª da equipe este mês</div></div>
+      <div class="bprog"><div class="bpw"><div class="bpf" style="width:100%"></div></div><div class="bpl">Meta: R$ 3.000 · Superou em R$ 200</div></div>
+      <div class="bval"><div class="bv1">Comissão</div><div class="bv2">R$ 160</div><div class="bv3">5% sobre R$ 3.200</div></div>
+    </div>
+
+    <div class="krow c3">
+      <div class="kc am"><div class="kl">Vendas Hoje</div><div class="kv">R$ 388</div><div class="kd up">↑ 2 pedidos confirmados</div></div>
+      <div class="kc nv"><div class="kl">Esta Semana</div><div class="kv">R$ 1.160</div><div class="kd up">↑ +34% vs semana anterior</div></div>
+      <div class="kc gn"><div class="kl">Pedidos no Mês</div><div class="kv">17 <small>pedidos</small></div><div class="kd nu">Ticket médio R$ 188</div></div>
+    </div>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="ph"><h3>Meus Treinamentos</h3><div class="phr"><button class="btn nv">Ver todos</button></div></div>
+        <div class="pb">
+          <div class="trc">
+            <div class="trh"><div class="trt">Coleção OI/2026</div><span class="tag ok">Disponível</span></div>
+            <div class="trm">5 módulos · 42 min · Lançamentos e combinações</div>
+            <div class="pm" style="margin-bottom:9px"><div class="pb2"><div class="f" style="width:60%;background:var(--navy)"></div></div><div class="pct">60%</div></div>
+            <button class="btn nv" style="width:100%">Continuar módulo 4 →</button>
+          </div>
+          <div class="trc">
+            <div class="trh"><div class="trt">Técnicas de Venda PFE</div><span class="tag er">Novo</span></div>
+            <div class="trm">3 módulos · 28 min · Abordagem, objeções e fechamento</div>
+            <div class="pm" style="margin-bottom:9px"><div class="pb2"><div class="f" style="width:0%;background:var(--red)"></div></div><div class="pct" style="color:#ccc">0%</div></div>
+            <button class="btn gh" style="width:100%">Iniciar treinamento</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>Últimas Atividades</h3></div>
+        <div class="pb">
+          <div class="act-list">
+            <div class="act-item"><div class="aic">✓</div><div><div class="at">Venda confirmada: <b>Polo Lisa Navy M</b></div><div class="ts">Hoje · 14:32 · R$ 194,00</div></div></div>
+            <div class="act-item"><div class="aic">↗</div><div><div class="at">Link compartilhado via <b>WhatsApp</b></div><div class="ts">Hoje · 11:15 · 3 cliques</div></div></div>
+            <div class="act-item"><div class="aic">✓</div><div><div class="at">Venda confirmada: <b>Camisa Oxford G</b></div><div class="ts">Ontem · 16:48 · R$ 322,00</div></div></div>
+            <div class="act-item"><div class="aic">▷</div><div><div class="at">Módulo 3 de <b>Coleção OI/2026</b> concluído</div><div class="ts">22/03 · 09:20</div></div></div>
+            <div class="act-item"><div class="aic">✓</div><div><div class="at">Venda confirmada: <b>Polo Fashion P</b></div><div class="ts">20/03 · 15:10 · R$ 265,00</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><h3>Meu Link de Venda Rastreado</h3><div class="phr"><span style="font-family:var(--ff);font-size:.52rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mid)">12 cliques hoje · 47 no mês</span></div></div>
+      <div class="pb" style="display:flex;align-items:center;gap:9px">
+        <div class="linkbox">polofromengland.com.br/?v=ANA-C-001</div>
+        <button class="btn nv">Copiar</button>
+        <button class="btn gh">WhatsApp</button>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ══ CEO ══ -->
+<div id="s-ceo" class="screen">
+<div class="portal">
+  <aside class="sb">
+    <div class="sb-head">
+      <div class="sb-logo">
+        <div class="lico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect width="16" height="10" fill="#012169"/><path d="M0 0L16 10M16 0L0 10" stroke="white" stroke-width="1.8"/><path d="M0 0L16 10M16 0L0 10" stroke="#C8102E" stroke-width=".9"/><rect x="6.5" y="0" width="3" height="10" fill="white"/><rect x="0" y="3.5" width="16" height="3" fill="white"/><rect x="7" y="0" width="2" height="10" fill="#C8102E"/><rect x="0" y="4" width="16" height="2" fill="#C8102E"/></svg></div>
+        <div class="ltxt"><div class="l1">POLO FROM ENGLAND</div><div class="l2">Visão Executiva</div></div>
+      </div>
+      <div class="sb-user"><div class="av g">AD</div><div><div class="un">Alexandre D.</div><div class="ur">CEO · PFE Brasil</div></div></div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-grp"><div class="sb-gl">Visão Geral</div>
+        <div class="ni active"><span class="ic">◼</span> Dashboard CEO</div>
+        <div class="ni"><span class="ic">◻</span> Embaixadores</div>
+        <div class="ni"><span class="ic">▣</span> Regiões</div>
+        <div class="ni"><span class="ic">$</span> Financeiro</div>
+        <div class="ni"><span class="ic">◈</span> Mídia & CAC</div>
+      </div>
+      <div class="sb-grp"><div class="sb-gl">Operação</div>
+        <div class="ni"><span class="ic">▤</span> Estoque</div>
+        <div class="ni"><span class="ic">⚙</span> Configurações</div>
+        <div class="ni"><span class="ic">♟</span> Usuários</div>
+        <div class="ni"><span class="ic">☰</span> Logs Auditoria</div>
+      </div>
+    </div>
+    <div class="sb-foot"><div class="sfi" onclick="show('login')">← Sair</div></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div><div class="th">Dashboard Executivo</div><div class="ts">Polo from England · Dados em tempo real · Março 2026</div></div>
+      <div class="tbr">
+        <select class="sel"><option>Março 2026</option><option>Q1 2026</option><option>YTD 2026</option></select>
+        <button class="btn gh">↓ PDF</button>
+        <button class="btn rd">↑ Exportar</button>
+      </div>
+    </div>
+
+    <div class="krow c5">
+      <div class="kc rd"><div class="kl">Faturamento B2C</div><div class="kv">R$ 87k</div><div class="kd up">↑ +22% vs fev</div></div>
+      <div class="kc gn"><div class="kl">Pedidos Totais</div><div class="kv">412</div><div class="kd up">↑ +67 pedidos</div></div>
+      <div class="kc nv"><div class="kl">Ticket Médio</div><div class="kv">R$ 211</div><div class="kd up">↑ +R$ 18</div></div>
+      <div class="kc am"><div class="kl">Embaixadores Ativos</div><div class="kv">18 <small>/ 24</small></div><div class="kd dn">↓ 6 sem venda</div></div>
+      <div class="kc nv"><div class="kl">CAC Médio</div><div class="kv">R$ 34</div><div class="kd up">↓ Melhorou R$ 8</div></div>
+    </div>
+
+    <div class="tgrid">
+      <div class="tc lon"><div class="tl">London</div><div class="tc2">6 embaixadores · mín. R$ 120k/ano</div><div class="tv">R$ 51.200</div><div class="tlbl">Faturamento no mês</div><div class="tbar"><div class="f" style="width:59%"></div></div><div class="tft"><span>59% do total</span><span>↑ +24%</span></div></div>
+      <div class="tc liv"><div class="tl">Liverpool</div><div class="tc2">8 embaixadores · mín. R$ 90k/ano</div><div class="tv">R$ 27.300</div><div class="tlbl">Faturamento no mês</div><div class="tbar"><div class="f" style="width:31%"></div></div><div class="tft"><span>31% do total</span><span>↑ +18%</span></div></div>
+      <div class="tc oxf"><div class="tl">Oxford</div><div class="tc2">10 embaixadores · mín. R$ 60k/ano</div><div class="tv">R$ 8.500</div><div class="tlbl">Faturamento no mês</div><div class="tbar"><div class="f" style="width:10%"></div></div><div class="tft"><span>10% do total</span><span>↑ +8%</span></div></div>
+    </div>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="ph"><h3>Faturamento por Canal</h3></div>
+        <div class="pb">
+          <div class="ch"><div class="chh"><span class="chn">Loja Física (corners)</span><span class="chv">R$ 52.200 · 60%</span></div><div class="cht"><div class="f" style="width:60%;background:var(--navy)"></div></div></div>
+          <div class="ch"><div class="chh"><span class="chn">B2C Digital (Shopify)</span><span class="chv">R$ 26.100 · 30%</span></div><div class="cht"><div class="f" style="width:30%;background:var(--red)"></div></div></div>
+          <div class="ch"><div class="chh"><span class="chn">Links Rastreados (vendedores)</span><span class="chv">R$ 8.700 · 10%</span></div><div class="cht"><div class="f" style="width:10%;background:var(--amber)"></div></div></div>
+          <div style="display:flex;gap:18px;margin-top:14px;padding-top:12px;border-top:1px solid var(--light)">
+            <div><div style="font-family:var(--ff);font-size:.48rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#ccc;margin-bottom:2px">Conversão</div><div style="font-family:var(--ff);font-size:.95rem;font-weight:900;color:var(--navy)">1,8%</div></div>
+            <div><div style="font-family:var(--ff);font-size:.48rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#ccc;margin-bottom:2px">Sessões</div><div style="font-family:var(--ff);font-size:.95rem;font-weight:900;color:var(--navy)">3.240</div></div>
+            <div><div style="font-family:var(--ff);font-size:.48rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#ccc;margin-bottom:2px">Pedidos B2C</div><div style="font-family:var(--ff);font-size:.95rem;font-weight:900;color:var(--navy)">58</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>Performance de Mídia</h3></div>
+        <div class="pb0"><table class="t">
+          <thead><tr><th>Canal</th><th>Investido</th><th>Receita</th><th>ROAS</th></tr></thead>
+          <tbody>
+            <tr><td>Meta Ads</td><td class="mono">R$ 2.400</td><td class="mono">R$ 14.200</td><td class="mono tg" style="font-size:.8rem">5,9×</td></tr>
+            <tr><td>Google Ads</td><td class="mono">R$ 1.800</td><td class="mono">R$ 9.800</td><td class="mono tg" style="font-size:.8rem">5,4×</td></tr>
+            <tr><td>Influencers</td><td class="mono">R$ 3.000</td><td class="mono">R$ 6.100</td><td class="mono ta" style="font-size:.8rem">2,0×</td></tr>
+            <tr><td class="fw8">Total</td><td class="mono" style="font-weight:800">R$ 7.200</td><td class="mono" style="font-weight:800">R$ 30.100</td><td class="mono tg" style="font-size:.8rem;font-weight:800">4,2×</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><h3>Ranking de Embaixadores — Março 2026</h3><div class="phr"><button class="btn gh">Ver todos (24)</button></div></div>
+      <div class="pb0"><table class="t">
+        <thead><tr><th>#</th><th>Embaixador</th><th>Tier</th><th>Cidade</th><th>Faturamento</th><th>Meta</th><th>Progresso</th><th>Equipe</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rk r1">1</span></td><td class="fw8">Espaço Elegante</td><td><span class="tag lon">London</span></td><td style="font-size:.63rem;color:var(--mid)">São Paulo SP</td><td class="mono tg">R$ 18.400</td><td class="mono" style="color:#ccc">R$ 16.000</td><td><div class="pm"><div class="pb2"><div class="f" style="width:100%;background:var(--green)"></div></div><div class="pct tg">115%</div></div></td><td style="text-align:center;font-size:.7rem;color:var(--mid)">8</td></tr>
+          <tr><td><span class="rk r2">2</span></td><td class="fw8">Moda Britânica</td><td><span class="tag lon">London</span></td><td style="font-size:.63rem;color:var(--mid)">Curitiba PR</td><td class="mono tg">R$ 12.200</td><td class="mono" style="color:#ccc">R$ 12.000</td><td><div class="pm"><div class="pb2"><div class="f" style="width:100%;background:var(--green)"></div></div><div class="pct tg">102%</div></div></td><td style="text-align:center;font-size:.7rem;color:var(--mid)">5</td></tr>
+          <tr><td><span class="rk r3">3</span></td><td class="fw8">R. Campos · Campinas</td><td><span class="tag lon">London</span></td><td style="font-size:.63rem;color:var(--mid)">Campinas SP</td><td class="mono">R$ 10.200</td><td class="mono" style="color:#ccc">R$ 12.000</td><td><div class="pm"><div class="pb2"><div class="f" style="width:85%;background:var(--navy)"></div></div><div class="pct">85%</div></div></td><td style="text-align:center;font-size:.7rem;color:var(--mid)">5</td></tr>
+          <tr><td><span class="rk" style="color:#bbb">4</span></td><td class="fw8">Galeria Premium</td><td><span class="tag liv">Liverpool</span></td><td style="font-size:.63rem;color:var(--mid)">Belo Horizonte MG</td><td class="mono">R$ 7.800</td><td class="mono" style="color:#ccc">R$ 9.000</td><td><div class="pm"><div class="pb2"><div class="f" style="width:87%;background:var(--navy)"></div></div><div class="pct">87%</div></div></td><td style="text-align:center;font-size:.7rem;color:var(--mid)">4</td></tr>
+          <tr><td><span class="rk tr">5</span></td><td class="fw8">Boutique Oxford</td><td><span class="tag oxf">Oxford</span></td><td style="font-size:.63rem;color:var(--mid)">Goiânia GO</td><td class="mono tr">R$ 1.200</td><td class="mono" style="color:#ccc">R$ 5.000</td><td><div class="pm"><div class="pb2"><div class="f" style="width:24%;background:var(--red)"></div></div><div class="pct tr">24%</div></div></td><td style="text-align:center;font-size:.7rem;color:var(--mid)">2</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('#sw button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  const btn=document.getElementById('btn-'+id);
+  if(btn)btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+document.addEventListener('click',e=>{
+  const ni=e.target.closest('.ni');
+  if(ni){ni.closest('.sb-nav').querySelectorAll('.ni').forEach(i=>i.classList.remove('active'));ni.classList.add('active');}
+});
+</script>
+</body>
+</html>
